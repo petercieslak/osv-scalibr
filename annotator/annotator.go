@@ -74,7 +74,7 @@ func Run(ctx context.Context, config *Config, inventory *inventory.Inventory) ([
 	//
 	// Therefore, packages originating from embedded filesystems are filtered out and
 	// not supplied to plugins that require a running system.
-	filteredInventory := filterOutEmbeddedPackages(inventory)
+	filteredInventory := FilterOutEmbeddedPackages(inventory)
 
 	for _, a := range config.Annotators {
 		var err error
@@ -90,7 +90,8 @@ func Run(ctx context.Context, config *Config, inventory *inventory.Inventory) ([
 	return statuses, nil
 }
 
-func filterOutEmbeddedPackages(inv *inventory.Inventory) *inventory.Inventory {
+// FilterOutEmbeddedPackages removes packages from the supplied inventory that belong to embedded filesystems.
+func FilterOutEmbeddedPackages(inv *inventory.Inventory) *inventory.Inventory {
 	if inv == nil {
 		return &inventory.Inventory{}
 	}
