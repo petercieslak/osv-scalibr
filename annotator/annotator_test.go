@@ -146,14 +146,19 @@ func TestRun(t *testing.T) {
 			inv: &inventory.Inventory{
 				Packages: []*extractor.Package{
 					{
-						Name:     "host-pkg",
+						Name:     "host-package",
 						Version:  "1.0",
-						Location: extractor.LocationFromPath("/bin/binwalk"),
+						Location: extractor.LocationFromPath("file.txt"),
 					},
 					{
-						Name:     "embedded-pkg",
+						Name:     "embedded-package-unix",
 						Version:  "2.0",
 						Location: extractor.LocationFromPath("file.vmdk:1:file.txt"),
+					},
+					{
+						Name:     "embedded-package-windows",
+						Version:  "3.0",
+						Location: extractor.LocationFromPath("C:\\file.vmdk:1:file.txt"),
 					},
 				},
 			},
@@ -167,14 +172,19 @@ func TestRun(t *testing.T) {
 			wantInv: &inventory.Inventory{
 				Packages: []*extractor.Package{
 					{
-						Name:     "host-pkg",
+						Name:     "host-package",
 						Version:  "1.0",
-						Location: extractor.LocationFromPath("/bin/binwalk"),
+						Location: extractor.LocationFromPath("file.txt"),
 					},
 					{
-						Name:     "embedded-pkg",
+						Name:     "embedded-package-unix",
 						Version:  "2.0",
 						Location: extractor.LocationFromPath("file.vmdk:1:file.txt"),
+					},
+					{
+						Name:     "embedded-package-windows",
+						Version:  "3.0",
+						Location: extractor.LocationFromPath("C:\\file.vmdk:1:file.txt"),
 					},
 				},
 			},
@@ -204,7 +214,7 @@ func TestRun(t *testing.T) {
 			}
 			// Verify filtering behavior
 			if tc.rec != nil {
-				if len(tc.rec.seenPackages) != 1 || tc.rec.seenPackages[0].Name != "host-pkg" {
+				if len(tc.rec.seenPackages) != 1 || tc.rec.seenPackages[0].Name != "host-package" {
 					t.Errorf("expected only host package, got %+v", tc.rec.seenPackages)
 				}
 			}

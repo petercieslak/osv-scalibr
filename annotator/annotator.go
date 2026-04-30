@@ -79,7 +79,8 @@ func Run(ctx context.Context, config *Config, inventory *inventory.Inventory) ([
 	for _, a := range config.Annotators {
 		var err error
 
-		if !a.Requirements().RunningSystem {
+		capabilities := a.Requirements()
+		if capabilities == nil || !capabilities.RunningSystem {
 			err = a.Annotate(ctx, input, inventory)
 		} else {
 			err = a.Annotate(ctx, input, filteredInventory)
