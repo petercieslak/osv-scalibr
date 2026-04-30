@@ -86,6 +86,11 @@ func TestDetector_truePositives(t *testing.T) {
 			file: "burp/basic-auth.burp",
 			want: []veles.Secret{credMock},
 		},
+		{
+			name: "postman",
+			file: "postman/http-basic.json",
+			want: []veles.Secret{credMock},
+		},
 		// Synthetic examples
 		{
 			name: "http_request_single_header",
