@@ -40,6 +40,7 @@ import (
 	"github.com/google/osv-scalibr/extractor/filesystem/language/python/setup"
 	"github.com/google/osv-scalibr/extractor/filesystem/simplefileapi"
 	"github.com/google/osv-scalibr/inventory"
+	"github.com/google/osv-scalibr/inventory/location"
 	"github.com/google/osv-scalibr/purl"
 	"github.com/google/osv-scalibr/stats"
 	"github.com/google/osv-scalibr/testing/extracttest"
@@ -139,6 +140,14 @@ func TestFileRequired(t *testing.T) {
 	}
 }
 
+func loc(path string, line int) extractor.PackageLocation {
+	return extractor.PackageLocation{
+		Descriptor: &location.Location{
+			File: &location.File{Path: path, LineNumber: line},
+		},
+	}
+}
+
 func TestExtract(t *testing.T) {
 	tests := []extracttest.TestTableEntry{
 		{
@@ -151,77 +160,77 @@ func TestExtract(t *testing.T) {
 					Name:     "pysaml2",
 					Version:  "6.5.1",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 20),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "xmlschema",
 					Version:  "1.7.1",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 21),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "requests",
 					Version:  "2.25.1",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 22),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "lxml",
 					Version:  "4.6.2",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 23),
 					Metadata: &setup.Metadata{VersionComparator: ">="},
 				},
 				{
 					Name:     "Jinja2",
 					Version:  "2.11.3",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 24),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "pkg1",
 					Version:  "0.1.1",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 25),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "pkg2",
 					Version:  "0.1.2",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 25),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "foo",
 					Version:  "2.20",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 26),
 					Metadata: &setup.Metadata{VersionComparator: ">="},
 				},
 				{
 					Name:     "pydantic",
 					Version:  "1.8.2",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 27),
 					Metadata: &setup.Metadata{VersionComparator: ">="},
 				},
 				{
 					Name:     "certifi",
 					Version:  "2017.4.17",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 28),
 					Metadata: &setup.Metadata{VersionComparator: ">="},
 				},
 				{
 					Name:     "pkg3",
 					Version:  "1.2.3",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid"),
+					Location: loc("testdata/valid", 29),
 					Metadata: &setup.Metadata{VersionComparator: "<="},
 				},
 			},
@@ -236,28 +245,28 @@ func TestExtract(t *testing.T) {
 					Name:     "accelerate",
 					Version:  "0.26.1",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid_2"),
+					Location: loc("testdata/valid_2", 19),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "transformers",
 					Version:  "4.37.2",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid_2"),
+					Location: loc("testdata/valid_2", 20),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "datasets",
 					Version:  "2.16.1",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid_2"),
+					Location: loc("testdata/valid_2", 21),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "mteb",
 					Version:  "1.4.0",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid_2"),
+					Location: loc("testdata/valid_2", 24),
 					Metadata: &setup.Metadata{VersionComparator: ">="},
 				},
 			},
@@ -272,21 +281,21 @@ func TestExtract(t *testing.T) {
 					Name:     "nanoplotter",
 					Version:  "0.13.1",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid_3"),
+					Location: loc("testdata/valid_3", 37),
 					Metadata: &setup.Metadata{VersionComparator: ">="},
 				},
 				{
 					Name:     "nanoget",
 					Version:  "0.11.0",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid_3"),
+					Location: loc("testdata/valid_3", 38),
 					Metadata: &setup.Metadata{VersionComparator: ">="},
 				},
 				{
 					Name:     "nanomath",
 					Version:  "0.12.0",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/valid_3"),
+					Location: loc("testdata/valid_3", 39),
 					Metadata: &setup.Metadata{VersionComparator: ">="},
 				},
 			},
@@ -301,21 +310,21 @@ func TestExtract(t *testing.T) {
 					Name:     "requests",
 					Version:  "2.25.1",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/template"),
+					Location: loc("testdata/template", 22),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 				{
 					Name:     "lxml",
 					Version:  "4.6.2",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/template"),
+					Location: loc("testdata/template", 23),
 					Metadata: &setup.Metadata{VersionComparator: ">="},
 				},
 				{
 					Name:     "Jinja2",
 					Version:  "2.11.3",
 					PURLType: purl.TypePyPi,
-					Location: extractor.LocationFromPath("testdata/template"),
+					Location: loc("testdata/template", 24),
 					Metadata: &setup.Metadata{VersionComparator: "=="},
 				},
 			},
