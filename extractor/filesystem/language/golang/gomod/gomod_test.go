@@ -369,13 +369,13 @@ func TestExtractor_Extract(t *testing.T) {
 					Name:     "github.com/davecgh/go-spew",
 					Version:  "1.1.1",
 					PURLType: purl.TypeGolang,
-					Location: extractor.LocationFromPath("testdata/indirect-1.16.sum"),
+					Location: loc("testdata/indirect-1.16.sum", 2),
 				},
 				{
 					Name:     "github.com/pmezard/go-difflib",
 					Version:  "1.0.0",
 					PURLType: purl.TypeGolang,
-					Location: extractor.LocationFromPath("testdata/indirect-1.16.sum"),
+					Location: loc("testdata/indirect-1.16.sum", 4),
 				},
 				{
 					Name:     "github.com/sirupsen/logrus",
@@ -383,26 +383,26 @@ func TestExtractor_Extract(t *testing.T) {
 					PURLType: purl.TypeGolang,
 					Location: extractor.PackageLocation{
 						Descriptor: &location.Location{File: &location.File{Path: "testdata/indirect-1.16.mod", LineNumber: 5}},
-						Related:    []location.Location{location.FromPath("testdata/indirect-1.16.sum")},
+						Related:    []location.Location{{File: &location.File{Path: "testdata/indirect-1.16.sum", LineNumber: 6}}},
 					},
 				},
 				{
 					Name:     "github.com/stretchr/testify",
 					Version:  "1.7.0",
 					PURLType: purl.TypeGolang,
-					Location: extractor.LocationFromPath("testdata/indirect-1.16.sum"),
+					Location: loc("testdata/indirect-1.16.sum", 9),
 				},
 				{
 					Name:     "golang.org/x/sys",
 					Version:  "0.0.0-20220715151400-c0bba94af5f8",
 					PURLType: purl.TypeGolang,
-					Location: extractor.LocationFromPath("testdata/indirect-1.16.sum"),
+					Location: loc("testdata/indirect-1.16.sum", 11),
 				},
 				{
 					Name:     "gopkg.in/yaml.v3",
 					Version:  "3.0.0-20200313102051-9f266ea9e77c",
 					PURLType: purl.TypeGolang,
-					Location: extractor.LocationFromPath("testdata/indirect-1.16.sum"),
+					Location: loc("testdata/indirect-1.16.sum", 14),
 				},
 				{
 					Name:     "stdlib",
@@ -510,7 +510,7 @@ func TestExtractor_Extract_WithExcludeIndirectConfig(t *testing.T) {
 					PURLType: purl.TypeGolang,
 					Location: extractor.PackageLocation{
 						Descriptor: &location.Location{File: &location.File{Path: "testdata/indirect-1.16.mod", LineNumber: 5}},
-						Related:    []location.Location{location.FromPath("testdata/indirect-1.16.sum")},
+						Related:    []location.Location{{File: &location.File{Path: "testdata/indirect-1.16.sum", LineNumber: 6}}},
 					},
 				},
 				{
