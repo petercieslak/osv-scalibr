@@ -28,6 +28,10 @@ var (
 	// import/export "collection" formats (Postman, Insomnia, OpenAPI, Bruno, etc.).
 	//
 	// ref: https://www.rfc-editor.org/rfc/rfc7617
+	//
+	// Assumption: This pattern strictly assumes the word "Authorization" will appear before
+	// the "Basic" keyword. This may cause false negatives in unordered or manually crafted
+	// JSON/YAML, but it covers the researched real-world cases.
 	basicAuthPattern = regexp.MustCompile(
 		`(?is)` +
 			`\bAuthorization` +
