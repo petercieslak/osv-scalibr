@@ -24,15 +24,15 @@ import (
 )
 
 var (
-	// base64Re matches Basic Authorization in HTTP dumps, flat JSON, and
+	// basicAuthPattern matches Basic Authorization in HTTP dumps, flat JSON, and
 	// import/export "collection" formats (Postman, Insomnia, OpenAPI, Bruno, etc.).
 	//
 	// ref: https://www.rfc-editor.org/rfc/rfc7617
-	base64Re = regexp.MustCompile(
+	basicAuthPattern = regexp.MustCompile(
 		`(?is)` +
 			`\bAuthorization` +
 			// Delimiters (handles HTTP/flat formats)
-			`["'\s=:]*` +
+			`["'\s=:]{0,10}` +
 			// Optional nearby "value" key (handles JSON/YAML)
 			`(?:.{0,150}?\bvalue["'\s=:]*)?` +
 			`Basic\s+([a-z0-9+/]+={0,2})`,
@@ -43,9 +43,9 @@ var (
 func NewBasicAuthDetector() veles.Detector {
 	return simpletoken.Detector{
 		MaxLen: 1000,
-		Re:     base64Re,
+		Re:     basicAuthPattern,
 		FromMatch: func(b []byte) (veles.Secret, bool) {
-			matches := base64Re.FindSubmatch(b)
+			matches := basicAuthPattern.FindSubmatch(b)
 			if len(matches) < 2 {
 				return nil, false
 			}

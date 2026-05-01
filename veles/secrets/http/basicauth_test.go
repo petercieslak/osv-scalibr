@@ -70,10 +70,7 @@ func TestDetector_truePositives(t *testing.T) {
 		{
 			name: "nginx_log",
 			file: "logs/nginx/access.log",
-			want: []veles.Secret{
-				http.BasicAuthCredentials{Username: "admin", Password: "password123"},
-				http.BasicAuthCredentials{Username: "admin", Password: "password123"},
-			},
+			want: []veles.Secret{cred123, cred123},
 		},
 		// Client side collections
 		{
@@ -188,6 +185,9 @@ func TestDetector_trueNegatives(t *testing.T) {
 		input string
 	}{
 		// Credentials are present, but not in base64 format
+		//
+		// Note: Detecting unencoded credentials is out of scope for the current design,
+		// even though these are valid basic auth credentials rather than base64.
 		{
 			name: "bruno-2",
 			file: "bruno/basic/BasicAuthStoredProperly.yml",
