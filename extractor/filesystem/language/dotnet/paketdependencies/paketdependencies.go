@@ -181,7 +181,7 @@ func (e Extractor) parseDependenciesFile(reader io.Reader, path string) ([]*extr
 				Name:      pkgName,
 				Version:   version,
 				PURLType:  purl.TypeNuget,
-				Locations: []string{path},
+				Location:  extractor.LocationFromPath(path),
 			}
 			packages = append(packages, pkg)
 			continue
@@ -247,7 +247,7 @@ func (e Extractor) parseDependenciesFile(reader io.Reader, path string) ([]*extr
 				Name:       repo,
 				Version:    version,
 				PURLType:   purl.TypeGithub,
-				Locations:  []string{path},
+				Location:   extractor.LocationFromPath(path),
 				SourceCode: sourceCode,
 			}
 			packages = append(packages, pkg)

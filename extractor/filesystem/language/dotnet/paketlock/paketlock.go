@@ -223,7 +223,7 @@ func (e Extractor) parseLockFile(reader io.Reader, path string) ([]*extractor.Pa
 				Name:      pkgName,
 				Version:   version,
 				PURLType:  purl.TypeNuget,
-				Locations: []string{path},
+				Location:  extractor.LocationFromPath(path),
 			}
 			packages = append(packages, pkg)
 		}
@@ -283,7 +283,7 @@ func getGithubPkg(repoName string, pkgName string, version string, path string) 
 		Name:       repoName,
 		Version:    pkgVersion,
 		PURLType:   purl.TypeGithub,
-		Locations:  []string{path},
+		Location:   extractor.LocationFromPath(path),
 		SourceCode: sourceCode,
 	}
 }

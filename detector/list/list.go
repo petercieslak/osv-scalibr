@@ -23,6 +23,7 @@ import (
 	"github.com/google/osv-scalibr/detector"
 	"github.com/google/osv-scalibr/detector/cis/generic_linux/etcpasswdpermissions"
 	"github.com/google/osv-scalibr/detector/cve/cve20257775"
+	"github.com/google/osv-scalibr/detector/cve/npm/canisterworm"
 	"github.com/google/osv-scalibr/detector/cve/untested/cve202011978"
 	"github.com/google/osv-scalibr/detector/cve/untested/cve202016846"
 	"github.com/google/osv-scalibr/detector/cve/untested/cve202233891"
@@ -33,6 +34,7 @@ import (
 	"github.com/google/osv-scalibr/detector/govulncheck/binary"
 	"github.com/google/osv-scalibr/detector/misc/cronjobprivesc"
 	"github.com/google/osv-scalibr/detector/misc/dockersocket"
+	"github.com/google/osv-scalibr/detector/misc/pammisconfig"
 	"github.com/google/osv-scalibr/detector/weakcredentials/codeserver"
 	"github.com/google/osv-scalibr/detector/weakcredentials/etcshadow"
 	"github.com/google/osv-scalibr/detector/weakcredentials/filebrowser"
@@ -56,7 +58,7 @@ var CIS = InitMap{
 var Govulncheck = InitMap{binary.Name: {binary.New}}
 
 // EndOfLife detectors.
-var EndOfLife = InitMap{linuxdistro.Name: {noCFG(linuxdistro.New)}}
+var EndOfLife = InitMap{linuxdistro.Name: {linuxdistro.New}}
 
 // Untested CVE scanning related detectors - since they don't have proper testing they
 // might not work as expected in the future.
@@ -78,22 +80,29 @@ var Untested = InitMap{
 
 // Weakcredentials detectors for weak credentials.
 var Weakcredentials = InitMap{
-	codeserver.Name:  {noCFG(codeserver.NewDefault)},
-	etcshadow.Name:   {noCFG(etcshadow.New)},
-	filebrowser.Name: {noCFG(filebrowser.New)},
-	winlocal.Name:    {noCFG(winlocal.New)},
+	codeserver.Name:  {codeserver.New},
+	etcshadow.Name:   {etcshadow.New},
+	filebrowser.Name: {filebrowser.New},
+	winlocal.Name:    {winlocal.New},
 }
 
 // Misc detectors for miscellaneous security issues.
 var Misc = InitMap{
-	cronjobprivesc.Name: {noCFG(cronjobprivesc.New)},
-	dockersocket.Name:   {noCFG(dockersocket.New)},
+	cronjobprivesc.Name: {cronjobprivesc.New},
+	dockersocket.Name:   {dockersocket.New},
+	pammisconfig.Name:   {pammisconfig.New},
 }
 
 // CVE for vulnerabilities that have a CVE associated
 var CVE = InitMap{
 	// CVE-2025-7775 detector
 	cve20257775.Name: {cve20257775.New},
+}
+
+// SupplyChain related vulnerability detectors.
+var SupplyChain = InitMap{
+	// Malicious NPM for CanisterWorm
+	canisterworm.Name: {canisterworm.New},
 }
 
 // Default detectors that are recommended to be enabled.
@@ -108,6 +117,7 @@ var All = concat(
 	Weakcredentials,
 	Untested,
 	CVE,
+	SupplyChain,
 )
 
 var detectorNames = concat(All, InitMap{
@@ -118,6 +128,7 @@ var detectorNames = concat(All, InitMap{
 	"weakcredentials":   vals(Weakcredentials),
 	"untested":          vals(Untested),
 	"cve":               vals(CVE),
+	"supplychain":       vals(SupplyChain),
 	"detectors/default": vals(Default),
 	"default":           vals(Default),
 	"detectors/all":     vals(All),
@@ -134,12 +145,6 @@ func concat(initMaps ...InitMap) InitMap {
 
 func vals(initMap InitMap) []InitFn {
 	return slices.Concat(slices.Collect(maps.Values(initMap))...)
-}
-
-// Wraps initer functions that don't take any config value to initer functions that do.
-// TODO(b/400910349): Remove once all plugins take config values.
-func noCFG(f func() detector.Detector) InitFn {
-	return func(_ *cpb.PluginConfig) (detector.Detector, error) { return f(), nil }
 }
 
 // DetectorsFromName returns a list of detectors from a name.
