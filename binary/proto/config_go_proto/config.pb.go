@@ -184,6 +184,7 @@ type PluginSpecificConfig struct {
 	//	*PluginSpecificConfig_HcpIdentity
 	//	*PluginSpecificConfig_HerokuExpiration
 	//	*PluginSpecificConfig_HuggingfaceMeta
+	//	*PluginSpecificConfig_ContainerdRuntime
 	Config        isPluginSpecificConfig_Config `protobuf_oneof:"config"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -775,6 +776,15 @@ func (x *PluginSpecificConfig) GetHuggingfaceMeta() *HuggingfaceMetaConfig {
 	return nil
 }
 
+func (x *PluginSpecificConfig) GetContainerdRuntime() *ContainerdRuntimeConfig {
+	if x != nil {
+		if x, ok := x.Config.(*PluginSpecificConfig_ContainerdRuntime); ok {
+			return x.ContainerdRuntime
+		}
+	}
+	return nil
+}
+
 type isPluginSpecificConfig_Config interface {
 	isPluginSpecificConfig_Config()
 }
@@ -1023,6 +1033,10 @@ type PluginSpecificConfig_HuggingfaceMeta struct {
 	HuggingfaceMeta *HuggingfaceMetaConfig `protobuf:"bytes,75,opt,name=huggingface_meta,json=huggingfaceMeta,proto3,oneof"`
 }
 
+type PluginSpecificConfig_ContainerdRuntime struct {
+	ContainerdRuntime *ContainerdRuntimeConfig `protobuf:"bytes,76,opt,name=containerd_runtime,json=containerdRuntime,proto3,oneof"`
+}
+
 func (*PluginSpecificConfig_GoBinary) isPluginSpecificConfig_Config() {}
 
 func (*PluginSpecificConfig_Govulncheck) isPluginSpecificConfig_Config() {}
@@ -1144,6 +1158,8 @@ func (*PluginSpecificConfig_HcpIdentity) isPluginSpecificConfig_Config() {}
 func (*PluginSpecificConfig_HerokuExpiration) isPluginSpecificConfig_Config() {}
 
 func (*PluginSpecificConfig_HuggingfaceMeta) isPluginSpecificConfig_Config() {}
+
+func (*PluginSpecificConfig_ContainerdRuntime) isPluginSpecificConfig_Config() {}
 
 type GoBinaryConfig struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -4158,6 +4174,51 @@ func (x *QCOW2Config) GetPassword() string {
 	return ""
 }
 
+type ContainerdRuntimeConfig struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The local path to the containerd socket.
+	SocketAddr    string `protobuf:"bytes,1,opt,name=socket_addr,json=socketAddr,proto3" json:"socket_addr,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ContainerdRuntimeConfig) Reset() {
+	*x = ContainerdRuntimeConfig{}
+	mi := &file_proto_config_proto_msgTypes[63]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ContainerdRuntimeConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ContainerdRuntimeConfig) ProtoMessage() {}
+
+func (x *ContainerdRuntimeConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_config_proto_msgTypes[63]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ContainerdRuntimeConfig.ProtoReflect.Descriptor instead.
+func (*ContainerdRuntimeConfig) Descriptor() ([]byte, []int) {
+	return file_proto_config_proto_rawDescGZIP(), []int{63}
+}
+
+func (x *ContainerdRuntimeConfig) GetSocketAddr() string {
+	if x != nil {
+		return x.SocketAddr
+	}
+	return ""
+}
+
 var File_proto_config_proto protoreflect.FileDescriptor
 
 const file_proto_config_proto_rawDesc = "" +
@@ -4169,7 +4230,7 @@ const file_proto_config_proto_rawDesc = "" +
 	"\x13disable_google_auth\x18\x04 \x01(\bR\x11disableGoogleAuth\x12\x1d\n" +
 	"\n" +
 	"user_agent\x18\x05 \x01(\tR\tuserAgent\x12F\n" +
-	"\x0fplugin_specific\x18\x02 \x03(\v2\x1d.scalibr.PluginSpecificConfigR\x0epluginSpecific\"\xf7\x1e\n" +
+	"\x0fplugin_specific\x18\x02 \x03(\v2\x1d.scalibr.PluginSpecificConfigR\x0epluginSpecific\"\xca\x1f\n" +
 	"\x14PluginSpecificConfig\x126\n" +
 	"\tgo_binary\x18\x01 \x01(\v2\x17.scalibr.GoBinaryConfigH\x00R\bgoBinary\x12>\n" +
 	"\vgovulncheck\x18\x02 \x01(\v2\x1a.scalibr.GovulncheckConfigH\x00R\vgovulncheck\x122\n" +
@@ -4238,7 +4299,8 @@ const file_proto_config_proto_rawDesc = "" +
 	"\x06osvdev\x18H \x01(\v2\x15.scalibr.OSVDevConfigH\x00R\x06osvdev\x12?\n" +
 	"\fhcp_identity\x18I \x01(\v2\x1a.scalibr.HCPIdentityConfigH\x00R\vhcpIdentity\x12N\n" +
 	"\x11heroku_expiration\x18J \x01(\v2\x1f.scalibr.HerokuExpirationConfigH\x00R\x10herokuExpiration\x12K\n" +
-	"\x10huggingface_meta\x18K \x01(\v2\x1e.scalibr.HuggingfaceMetaConfigH\x00R\x0fhuggingfaceMetaB\b\n" +
+	"\x10huggingface_meta\x18K \x01(\v2\x1e.scalibr.HuggingfaceMetaConfigH\x00R\x0fhuggingfaceMeta\x12Q\n" +
+	"\x12containerd_runtime\x18L \x01(\v2 .scalibr.ContainerdRuntimeConfigH\x00R\x11containerdRuntimeB\b\n" +
 	"\x06configJ\x04\b0\x109J\x04\b;\x10>J\x04\bB\x10D\"B\n" +
 	"\x0eGoBinaryConfig\x120\n" +
 	"\x14version_from_content\x18\x01 \x01(\bR\x12versionFromContent\"D\n" +
@@ -4389,7 +4451,10 @@ const file_proto_config_proto_rawDesc = "" +
 	"\x15client_timeout_millis\x18\x02 \x01(\x03R\x13clientTimeoutMillis\"X\n" +
 	"\vQCOW2Config\x12-\n" +
 	"\x13max_file_size_bytes\x18\x01 \x01(\x03R\x10maxFileSizeBytes\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpasswordBFB\x06ConfigP\x01Z:github.com/google/osv-scalibr/binary/proto/config_go_protob\x06proto3"
+	"\bpassword\x18\x02 \x01(\tR\bpassword\":\n" +
+	"\x17ContainerdRuntimeConfig\x12\x1f\n" +
+	"\vsocket_addr\x18\x01 \x01(\tR\n" +
+	"socketAddrBFB\x06ConfigP\x01Z:github.com/google/osv-scalibr/binary/proto/config_go_protob\x06proto3"
 
 var (
 	file_proto_config_proto_rawDescOnce sync.Once
@@ -4403,7 +4468,7 @@ func file_proto_config_proto_rawDescGZIP() []byte {
 	return file_proto_config_proto_rawDescData
 }
 
-var file_proto_config_proto_msgTypes = make([]protoimpl.MessageInfo, 63)
+var file_proto_config_proto_msgTypes = make([]protoimpl.MessageInfo, 64)
 var file_proto_config_proto_goTypes = []any{
 	(*PluginConfig)(nil),                       // 0: scalibr.PluginConfig
 	(*PluginSpecificConfig)(nil),               // 1: scalibr.PluginSpecificConfig
@@ -4468,6 +4533,7 @@ var file_proto_config_proto_goTypes = []any{
 	(*OSVDevConfig)(nil),                       // 60: scalibr.OSVDevConfig
 	(*CodeServerConfig)(nil),                   // 61: scalibr.CodeServerConfig
 	(*QCOW2Config)(nil),                        // 62: scalibr.QCOW2Config
+	(*ContainerdRuntimeConfig)(nil),            // 63: scalibr.ContainerdRuntimeConfig
 }
 var file_proto_config_proto_depIdxs = []int32{
 	1,  // 0: scalibr.PluginConfig.plugin_specific:type_name -> scalibr.PluginSpecificConfig
@@ -4532,11 +4598,12 @@ var file_proto_config_proto_depIdxs = []int32{
 	38, // 59: scalibr.PluginSpecificConfig.hcp_identity:type_name -> scalibr.HCPIdentityConfig
 	37, // 60: scalibr.PluginSpecificConfig.heroku_expiration:type_name -> scalibr.HerokuExpirationConfig
 	36, // 61: scalibr.PluginSpecificConfig.huggingface_meta:type_name -> scalibr.HuggingfaceMetaConfig
-	62, // [62:62] is the sub-list for method output_type
-	62, // [62:62] is the sub-list for method input_type
-	62, // [62:62] is the sub-list for extension type_name
-	62, // [62:62] is the sub-list for extension extendee
-	0,  // [0:62] is the sub-list for field type_name
+	63, // 62: scalibr.PluginSpecificConfig.containerd_runtime:type_name -> scalibr.ContainerdRuntimeConfig
+	63, // [63:63] is the sub-list for method output_type
+	63, // [63:63] is the sub-list for method input_type
+	63, // [63:63] is the sub-list for extension type_name
+	63, // [63:63] is the sub-list for extension extendee
+	0,  // [0:63] is the sub-list for field type_name
 }
 
 func init() { file_proto_config_proto_init() }
@@ -4606,6 +4673,7 @@ func file_proto_config_proto_init() {
 		(*PluginSpecificConfig_HcpIdentity)(nil),
 		(*PluginSpecificConfig_HerokuExpiration)(nil),
 		(*PluginSpecificConfig_HuggingfaceMeta)(nil),
+		(*PluginSpecificConfig_ContainerdRuntime)(nil),
 	}
 	file_proto_config_proto_msgTypes[49].OneofWrappers = []any{}
 	file_proto_config_proto_msgTypes[58].OneofWrappers = []any{}
@@ -4615,7 +4683,7 @@ func file_proto_config_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_config_proto_rawDesc), len(file_proto_config_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   63,
+			NumMessages:   64,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
