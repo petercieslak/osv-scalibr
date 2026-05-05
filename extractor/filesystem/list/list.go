@@ -448,15 +448,15 @@ var (
 		wordpressplugins.Name: {wordpressplugins.New},
 		chromeextensions.Name: {chromeextensions.New},
 		netscaler.Name:        {netscaler.New},
-		githubactions.Name:    {githubactions.New},
 	}
 
 	// MiscSource extractors for miscellaneous purposes.
 	MiscSource = InitMap{
-		asdf.Name:        {asdf.New},
-		mise.Name:        {mise.New},
-		nvm.Name:         {nvm.New},
-		nodeversion.Name: {nodeversion.New},
+		asdf.Name:          {asdf.New},
+		mise.Name:          {mise.New},
+		nvm.Name:           {nvm.New},
+		nodeversion.Name:   {nodeversion.New},
+		githubactions.Name: {githubactions.New},
 	}
 
 	// EmbeddedFS extractors.
