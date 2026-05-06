@@ -122,6 +122,31 @@ func TestExtractor_Extract(t *testing.T) {
 			},
 		},
 		{
+			Name: "git_and_local_dependencies",
+			InputConfig: extracttest.ScanInputMockConfig{
+				Path: "testdata/git-and-local-deps.toml",
+			},
+			WantPackages: []*extractor.Package{
+				{
+					Name:     "gleam_stdlib",
+					Version:  ">= 0.34.0 and < 2.0.0",
+					PURLType: purl.TypeHex,
+					Location: extractor.LocationFromPath("testdata/git-and-local-deps.toml"),
+				},
+				{
+					Name:     "my_git_package",
+					Version:  "",
+					PURLType: purl.TypeHex,
+					Location: extractor.LocationFromPath("testdata/git-and-local-deps.toml"),
+					SourceCode: &extractor.SourceCodeIdentifier{
+						Repo:   "https://github.com/my-username/my_git_package",
+						Commit: "a8b3c5d82",
+					},
+				},
+				// my_local_package is skipped
+			},
+		},
+		{
 			Name: "deps_and_dev_dependencies",
 			InputConfig: extracttest.ScanInputMockConfig{
 				Path: "testdata/deps-and-dev-deps.toml",

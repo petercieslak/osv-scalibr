@@ -36,8 +36,16 @@ const (
 )
 
 type gleamTomlFile struct {
-	Dependencies    map[string]string `toml:"dependencies"`
-	DevDependencies map[string]string `toml:"dev-dependencies"`
+	Dependencies    map[string]toml.Primitive `toml:"dependencies"`
+	DevDependencies map[string]toml.Primitive `toml:"dev-dependencies"`
+}
+
+// gleamDep represents a non-string (table) dependency entry.
+type gleamDep struct {
+	Version string `toml:"version"`
+	Git     string `toml:"git"`
+	Ref     string `toml:"ref"`
+	Path    string `toml:"path"`
 }
 
 // Extractor extracts Gleam packages from gleam.toml files.
@@ -63,19 +71,19 @@ func (e Extractor) FileRequired(api filesystem.FileAPI) bool {
 // Extract extracts packages from gleam.toml files passed through the scan input.
 func (e Extractor) Extract(ctx context.Context, input *filesystem.ScanInput) (inventory.Inventory, error) {
 	var f gleamTomlFile
-	if _, err := toml.NewDecoder(input.Reader).Decode(&f); err != nil {
+	md, err := toml.NewDecoder(input.Reader).Decode(&f)
+	if err != nil {
 		return inventory.Inventory{}, fmt.Errorf("could not extract: %w", err)
 	}
 
 	loc := extractor.LocationFromPath(input.Path)
 	packages := make([]*extractor.Package, 0, len(f.Dependencies)+len(f.DevDependencies))
 
-	var err error
-	packages, err = appendPackages(ctx, packages, f.Dependencies, loc)
+	packages, err = appendPackages(ctx, packages, f.Dependencies, md, loc)
 	if err != nil {
 		return inventory.Inventory{Packages: packages}, err
 	}
-	packages, err = appendPackages(ctx, packages, f.DevDependencies, loc)
+	packages, err = appendPackages(ctx, packages, f.DevDependencies, md, loc)
 	if err != nil {
 		return inventory.Inventory{Packages: packages}, err
 	}
@@ -86,19 +94,51 @@ func (e Extractor) Extract(ctx context.Context, input *filesystem.ScanInput) (in
 func appendPackages(
 	ctx context.Context,
 	packages []*extractor.Package,
-	deps map[string]string,
+	deps map[string]toml.Primitive,
+	md toml.MetaData,
 	loc extractor.PackageLocation,
 ) ([]*extractor.Package, error) {
-	for name, version := range deps {
+	for name, prim := range deps {
 		if err := ctx.Err(); err != nil {
 			return packages, fmt.Errorf("gleam/gleamtoml halted due to context error: %w", err)
 		}
-		packages = append(packages, &extractor.Package{
-			Name:     name,
-			Version:  version,
-			PURLType: purl.TypeHex,
-			Location: loc,
-		})
+
+		// Try string first (e.g. gleam_stdlib = ">= 0.34.0 and < 2.0.0")
+		var version string
+		if err := md.PrimitiveDecode(prim, &version); err == nil {
+			packages = append(packages, &extractor.Package{
+				Name:     name,
+				Version:  version,
+				PURLType: purl.TypeHex,
+				Location: loc,
+			})
+			continue
+		}
+
+		// Try table (e.g. git or path dependency)
+		var dep gleamDep
+		if err := md.PrimitiveDecode(prim, &dep); err != nil {
+			return packages, fmt.Errorf("gleam/gleamtoml: could not decode dependency %q: %w", name, err)
+		}
+
+		// Skip local path dependencies.
+		if dep.Path != "" {
+			continue
+		}
+
+		// Git dependency: populate SourceCode.
+		if dep.Git != "" {
+			packages = append(packages, &extractor.Package{
+				Name:     name,
+				Version:  dep.Version,
+				PURLType: purl.TypeHex,
+				Location: loc,
+				SourceCode: &extractor.SourceCodeIdentifier{
+					Repo:   dep.Git,
+					Commit: dep.Ref,
+				},
+			})
+		}
 	}
 	return packages, nil
 }
