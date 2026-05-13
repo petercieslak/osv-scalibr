@@ -40,8 +40,11 @@ import (
 	"github.com/google/osv-scalibr/extractor/filesystem/language/dotnet/nugetcpm"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/dotnet/packagesconfig"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/dotnet/packageslockjson"
+	"github.com/google/osv-scalibr/extractor/filesystem/language/dotnet/paketdependencies"
+	"github.com/google/osv-scalibr/extractor/filesystem/language/dotnet/paketlock"
 	elixir "github.com/google/osv-scalibr/extractor/filesystem/language/elixir/mixlock"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/erlang/mixlock"
+	"github.com/google/osv-scalibr/extractor/filesystem/language/gleam/gleamtoml"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/golang/gobinary"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/golang/gomod"
 	"github.com/google/osv-scalibr/extractor/filesystem/language/haskell/cabal"
@@ -247,6 +250,8 @@ var (
 	DartSource = InitMap{pubspec.Name: {pubspec.New}}
 	// ErlangSource extractors for Erlang.
 	ErlangSource = InitMap{mixlock.Name: {mixlock.New}}
+	// GleamSource extractors for Gleam.
+	GleamSource = InitMap{gleamtoml.Name: {gleamtoml.New}}
 	// NimSource extractors for Nim.
 	NimSource = InitMap{nimble.Name: {nimble.New}}
 	// LuaSource extractors for Lua.
@@ -294,11 +299,13 @@ var (
 	}
 	// DotnetSource extractors for Dotnet (.NET).
 	DotnetSource = InitMap{
-		depsjson.Name:         {depsjson.New},
-		csproj.Name:           {csproj.New},
-		nugetcpm.Name:         {nugetcpm.New},
-		packagesconfig.Name:   {packagesconfig.New},
-		packageslockjson.Name: {packageslockjson.New},
+		csproj.Name:            {csproj.New},
+		depsjson.Name:          {depsjson.New},
+		nugetcpm.Name:          {nugetcpm.New},
+		packagesconfig.Name:    {packagesconfig.New},
+		packageslockjson.Name:  {packageslockjson.New},
+		paketdependencies.Name: {paketdependencies.New},
+		paketlock.Name:         {paketlock.New},
 	}
 	// DotnetArtifact extractors for Dotnet (.NET).
 	DotnetArtifact = InitMap{
@@ -457,10 +464,10 @@ var (
 	// MiscSource extractors for miscellaneous purposes.
 	MiscSource = InitMap{
 		asdf.Name:          {asdf.New},
+		githubactions.Name: {githubactions.New},
 		mise.Name:          {mise.New},
 		nvm.Name:           {nvm.New},
 		nodeversion.Name:   {nodeversion.New},
-		githubactions.Name: {githubactions.New},
 	}
 
 	// EmbeddedFS extractors.
@@ -491,6 +498,7 @@ var (
 		DartSource,
 		ErlangSource,
 		ElixirSource,
+		GleamSource,
 		HaskellSource,
 		PHPSource,
 		RSource,
@@ -550,6 +558,7 @@ var (
 		"go":         vals(concat(GoSource, GoArtifact)),
 		"dart":       vals(DartSource),
 		"erlang":     vals(ErlangSource),
+		"gleam":      vals(GleamSource),
 		"lua":        vals(LuaSource),
 		"nim":        vals(NimSource),
 		"ocaml":      vals(OcamlSource),
